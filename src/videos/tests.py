@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone, text
 
-from .models import Video
+from .models import Video, PublishStateOptions
 
 
 class VideoModelTestCase(TestCase):
@@ -15,7 +15,7 @@ class VideoModelTestCase(TestCase):
         Video.objects.create(title=self.MOVIE_TITLE_A, video_id="123")
         Video.objects.create(
             title=self.MOVIE_TITLE_B,
-            state=Video.VideoStateOptions.PUBLISH,
+            state=PublishStateOptions.PUBLISH,
             video_id="321",
         )
 
@@ -35,12 +35,12 @@ class VideoModelTestCase(TestCase):
             self.assertEqual(item.slug, slug)
 
     def test_draft_case(self):
-        query_set = Video.objects.filter(state=Video.VideoStateOptions.DRAFT)
+        query_set = Video.objects.filter(state=PublishStateOptions.DRAFT)
         self.assertEqual(query_set.count(), self.DRAFT_OBJECTS_COUNT)
 
     def test_publish_case(self):
         query_set = Video.objects.filter(
-            state=Video.VideoStateOptions.PUBLISH, publish_timestamp__lte=timezone.now()
+            state=PublishStateOptions.PUBLISH, publish_timestamp__lte=timezone.now()
         )
         self.assertTrue(query_set.exists())
 
