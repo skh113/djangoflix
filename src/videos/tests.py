@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.utils import timezone, text
+from djangoflix.db.models import PublishStateOptions
 
-from .models import Video, PublishStateOptions
+from .models import Video
 
 
 class VideoModelTestCase(TestCase):
