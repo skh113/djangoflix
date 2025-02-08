@@ -15,7 +15,7 @@ class VideoModelTestCase(TestCase):
         Video.objects.create(title=self.MOVIE_TITLE_A, video_id="123")
         Video.objects.create(
             title=self.MOVIE_TITLE_B,
-            state=Video.VideoStateOptions.PULISH,
+            state=Video.VideoStateOptions.PUBLISH,
             video_id="321",
         )
 
@@ -40,6 +40,12 @@ class VideoModelTestCase(TestCase):
 
     def test_publish_case(self):
         query_set = Video.objects.filter(
-            state=Video.VideoStateOptions.PULISH, publish_timestamp__lte=timezone.now()
+            state=Video.VideoStateOptions.PUBLISH, publish_timestamp__lte=timezone.now()
         )
         self.assertTrue(query_set.exists())
+
+    def test_publish_manager(self):
+        query_set = Video.objects.all().published()
+        query_set_2 = Video.objects.published()
+        self.assertTrue(query_set.exists())
+        self.assertEqual(query_set.count(), query_set_2.count())

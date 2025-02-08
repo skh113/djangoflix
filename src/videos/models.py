@@ -2,9 +2,25 @@ from django.db import models
 from django.utils import timezone, text
 
 
+class VideoQuerySet(models.QuerySet):
+    def published(self):
+        now = timezone.now()
+        return self.filter(
+            state=Video.VideoStateOptions.PUBLISH, publish_timestamp__lte=now
+        )
+
+
+class VideoManager(models.Manager):
+    def get_queryset(self):
+        return VideoQuerySet(self.model, using=self._db)
+
+    def published(self):
+        return self.get_queryset().published()
+
+
 class Video(models.Model):
     class VideoStateOptions(models.TextChoices):
-        PULISH = "PU", "Publish"
+        PUBLISH = "PU", "Publish"
         DRAFT = "DR", "Draft"
         UNLISTED = "UN", "Unlisted"
         PRIVATE = "PR", "Private"
@@ -23,13 +39,15 @@ class Video(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    objects = VideoManager()
+
     @property
     def is_published(self):
         return self.is_active
 
     def save(self, *args, **kwargs):
         if (
-            self.state == self.VideoStateOptions.PULISH
+            self.state == self.VideoStateOptions.PUBLISH
             and self.publish_timestamp is None
         ):
             self.publish_timestamp = timezone.now()
