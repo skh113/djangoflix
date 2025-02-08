@@ -45,6 +45,9 @@ class Video(models.Model):
     def is_published(self):
         return self.is_active
 
+    def playlist_ids(self):
+        return list(self.playlist_set.all().values_list("id", flat=True))
+
     def __str__(self):
         return self.title
 
