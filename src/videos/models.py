@@ -35,7 +35,7 @@ class Video(models.Model):
         # Ensure unique slug
         original_slug = self.slug
         counter = 1
-        while Video.objects.filter(slug=self.slug).exists():
+        while Video.objects.filter(slug=self.slug).exclude(id=self.id).exists():
             self.slug = f"{original_slug}-{counter}"
             counter += 1
         super().save(*args, **kwargs)
