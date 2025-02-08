@@ -4,9 +4,10 @@ from .models import VideoAllProxy, VideoPublishedProxy
 
 
 class VideoAllAdmin(admin.ModelAdmin):
-    list_display = ['title', 'video_id']
-    list_filter = ['video_id']
+    list_display = ['id', 'title', 'video_id', 'is_published']
+    list_filter = ['is_active']
     search_fields = ['title', 'description', 'video_id']
+    readonly_fields = ['id', 'is_published']
 
     class Meta:
         model = VideoAllProxy
@@ -15,9 +16,8 @@ class VideoAllAdmin(admin.ModelAdmin):
 admin.site.register(VideoAllProxy, VideoAllAdmin)
 
 
-class VideoProxyAdmin(admin.ModelAdmin):
+class VideoPublishedProxyAdmin(admin.ModelAdmin):
     list_display = ['title', 'video_id']
-    list_filter = ['video_id']
     search_fields = ['title', 'description', 'video_id']
 
     class Meta:
@@ -27,4 +27,4 @@ class VideoProxyAdmin(admin.ModelAdmin):
         return VideoPublishedProxy.objects.filter(is_active=True)
 
 
-admin.site.register(VideoPublishedProxy, VideoProxyAdmin)
+admin.site.register(VideoPublishedProxy, VideoPublishedProxyAdmin)
