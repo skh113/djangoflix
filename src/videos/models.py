@@ -12,7 +12,7 @@ class Video(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     slug = models.SlugField(unique=True, max_length=255, blank=True, null=True)
-    video_id = models.CharField(max_length=255)
+    video_id = models.CharField(unique=True, max_length=255)
     is_active = models.BooleanField(default=True)
     state = models.CharField(
         max_length=2, choices=VideoStateOptions.choices, default=VideoStateOptions.DRAFT

@@ -11,9 +11,9 @@ class VideoModelTestCase(TestCase):
     PUBLISH_OBJECTS_COUNT = 1
 
     def setUp(self) -> None:
-        Video.objects.create(title=self.MOVIE_TITLE)
+        Video.objects.create(title=self.MOVIE_TITLE, video_id="123")
         Video.objects.create(
-            title=self.MOVIE_TITLE, state=Video.VideoStateOptions.PULISH
+            title=self.MOVIE_TITLE, state=Video.VideoStateOptions.PULISH, video_id="321"
         )
 
     def test_valid_title(self):
