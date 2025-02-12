@@ -71,3 +71,6 @@ class PlaylistItem(models.Model):
 
     class Meta:
         ordering = ["order", "-created"]
+
+    def __str__(self):
+        return f"{self.playlist.title} - {self.video.title}"
