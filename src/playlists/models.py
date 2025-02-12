@@ -33,7 +33,9 @@ class Playlist(models.Model):
         on_delete=models.SET_NULL,
         related_name="playlist_featured",
     )
-    videos = models.ManyToManyField(Video, blank=True, related_name="playlist_item")
+    videos = models.ManyToManyField(
+        Video, blank=True, related_name="playlist_item", through="PlaylistItem"
+    )
     is_active = models.BooleanField(default=True)
     state = models.CharField(
         max_length=2,
@@ -58,3 +60,14 @@ class Playlist(models.Model):
 
 pre_save.connect(publish_state_pre_save, sender=Playlist)
 pre_save.connect(slugify_pre_save, sender=Playlist)
+
+
+class PlaylistItem(models.Model):
+    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    order = models.IntegerField(default=1)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["order", "-created"]
