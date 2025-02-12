@@ -1,10 +1,9 @@
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils import timezone
-from videos.models import Video
-
 from djangoflix.db.models import PublishStateOptions
 from djangoflix.db.receivers import publish_state_pre_save, slugify_pre_save
+from videos.models import Video
 
 
 class PlaylistQuerySet(models.QuerySet):
@@ -27,7 +26,14 @@ class Playlist(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     slug = models.SlugField(unique=True, max_length=255, blank=True, null=True)
-    video = models.ForeignKey(Video, null=True, on_delete=models.SET_NULL)
+    video = models.ForeignKey(
+        Video,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="playlist_featured",
+    )
+    videos = models.ManyToManyField(Video, blank=True, related_name="playlist_item")
     is_active = models.BooleanField(default=True)
     state = models.CharField(
         max_length=2,
